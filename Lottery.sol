@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.5.0 <0.9.0;
-
+/*
+The lottery smart contract is DeFi that can allow multiple parcipants sending 0.1 ether at time
+(and participant can contest/send 0.1 ETHER as many times as possible). The manager will pick the winner,
+and the contract balance will be automatically sent to the winner wallet address.
+10% of the balance will be sent to manager of the lottery as the service charge.
+*/
 contract Lottery {
     
     //this will hold the players, since we do not know how many players that
@@ -24,7 +29,7 @@ contract Lottery {
         //check that the manager cannot perform the lottery contest
         require(manager != msg.sender, "Oops!, it appears that you are a manager, therefore you cannot perform in the lottery contest");
         //we require user to send fix amount(0.1 ETH) to the lottery contract
-        //however user cannot send as much as fix amount as possible.
+        //however user can send as much as fix amount as possible. but can only send it one at a time
         require(msg.value == 0.1 ether, "You are required to send 0.1 ETH at a time to the lottery contract");
         //for every payment made for the lottery, add the sender to the array
         //we are not interested how much the sender have sent
@@ -33,22 +38,22 @@ contract Lottery {
         playerAddresses.push(payable(msg.sender));
     }
     function getBalance() public view returns(uint) {
-        //only the manager can see the balance
+        //only the manager can see the contract balance
         require(msg.sender == manager, "It appears that you are not the manger of this contract!");
         return address(this).balance;
     }
     //in other to generate the winner, we need to generate high computation numbers by using
     //block difficulty, block timestamp and total numbers of players
-    //the we will modulus the high numbers but players array length
+    //the we will modulus the high numbers by players array length
     //the result index is the winner.
     function generateRandomNumber() view public returns(uint)  {
-        //pls this is not recommended way of generating random. solidty community advise we use chainingURF API
+        //pls this is not recommended way of generating random in real world application. solidty community advise we use chainingURF API
        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, playerAddresses.length)));
     }
     
     //pick the winner
     function pickWinner()  public{
-        //it is only the manager that can pick the winner  if the players is less than 10 otherwise anyone can pick a winner
+        //it is only the manager that can pick the winner.
         require(manager == msg.sender, "Oops! only the manager is allowed to pick the winner");
         //before you can select winner, players must at least be three 
         require(playerAddresses.length >= 3, "Oops, Before you can pick a winner, total numbers of players must at least be three");
