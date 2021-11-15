@@ -101,6 +101,17 @@ contract OkunCryptos is  ERC20Interface {
      }
 }
 
+//ICO can be seen a service for capital for startup for company that offer investors some amount new cryptocurrency
+//in exhange for well knowm token such as bitcoin or ethereum
+//our ICO will accept ETH in  exchange for ELDER token
+//investor will send ETH to ICO smart contract address and in return will get ELDER equavalent token
+//there will be externally owned address(EOA) that receive the ETH the deposit sent
+//the minimum investment is 0.001 ETH and max is 5 ETH
+//ICO hardcap is 300 ETH
+//there will start and end of ICO
+//locking up token - ELDER token will be tradeable after sometimes
+//incase of emergency or hacked, admin can stop ICO or change EOA
+//typically ICO can be in state such as BeforeState, Running, AfterEnd and Halted
 contract ElderICO is OkunCryptos {
     //ico will have admin... that can start the ICO or halt if gets compromised or change the admin address 
     address public admin;
